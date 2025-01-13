@@ -13,7 +13,6 @@ import (
 
 func main() {
 	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stdout, nil)))
-	log.SetFlags()
 	log.Println("App running in environment:", config.ENVs.APPEnv)
 	db, err := storage.NewPostgreStorage(storage.Config{
 		DBUser:     config.ENVs.DBUser,
@@ -24,7 +23,7 @@ func main() {
 		DBSSLMode:  config.ENVs.DBSSLMode,
 	})
 
-	initStorage(db)
+	checkStorage(db)
 	server := api.NewAPIServer(config.ENVs.HTTPHost+":"+config.ENVs.HTTPPort, nil)
 	err = server.Run()
 	if err != nil {
@@ -32,7 +31,7 @@ func main() {
 	}
 }
 
-func initStorage(db *gorm.DB) {
+func checkStorage(db *gorm.DB) {
 	conn, err := db.DB()
 	if err != nil {
 		log.Fatal(err)

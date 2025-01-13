@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/zechao158/ecomm/service/auth"
 	"github.com/zechao158/ecomm/types"
@@ -38,6 +39,11 @@ func (h *Handler) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		WriteError(w, http.StatusInternalServerError, err)
 		return
+	}
+	if err := Validate.Struct(payload); err != nil {
+		validationErr := err.(validator.ValidationErrors)
+		WriteError(w, http.StatusBadRequest, validationErr)
+		return 
 	}
 
 	hashedPass, err := auth.HashPassword(payload.Password)

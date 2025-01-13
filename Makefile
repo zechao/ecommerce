@@ -1,4 +1,9 @@
 
+install-tools:
+	@echo installing tools
+	go install github.com/pressly/goose/v3/cmd/goose@latest
+	go install github.com/matryer/moq@latest
+
 
 build:
 	@go build -o bin/ecom main.go
@@ -7,7 +12,11 @@ build:
 test:
 	@go test -v ./...
 
-set-up:
+setup-local:
+	@docker-compose up --wait  -d 
+
+reset-local:
+	@docker-compose down -v
 	@docker-compose up --wait  -d 
 
 run: build
@@ -15,3 +24,16 @@ run: build
 
 run-local: set-up
 	go run main.go
+
+migration-create:
+	@if [ -z "$(name)" ]; then \
+		echo "Error: Please provide a migration name using 'make migration-create name=<migration_name>'"; \
+		exit 1; \
+	fi
+	goose -s -dir ./migrations create $(name) sql
+
+migration-up:
+	@go run migrations/migration.go 
+
+migration-down:
+	@go run migrations/migration.go 

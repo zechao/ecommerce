@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -43,6 +44,7 @@ func TestUserServiceHandlers(t *testing.T) {
 		router := mux.NewRouter()
 		router.HandleFunc("/register", handler.HandleRegister)
 		router.ServeHTTP(rr, req)
+		fmt.Println(rr.Body.String())
 		assert.Equal(t, http.StatusBadRequest, rr.Code)
 	})
 }
