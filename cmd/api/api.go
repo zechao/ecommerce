@@ -1,6 +1,7 @@
 package api
 
 import (
+	"io"
 	"log"
 	"net/http"
 
@@ -23,12 +24,23 @@ func NewAPIServer(addr string, db *gorm.DB) *APIServer {
 
 func (s *APIServer) Run() error {
 	router := mux.NewRouter()
+	router.Use(PanicRecoveryMiddleware)
+	router.Path("/health").Methods(http.MethodGet).
+		HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+			io.WriteString(w, "ok")
+		})
+
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
 	userStore := user.NewRepository(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
-	
-	log.Println("Listening on", s.addr)
-	return http.ListenAndServe(s.addr, router)
+	log.Println("Http servevr listening on:", s.addr)
+	server := &http.Server{
+		Addr:    s.addr,
+		Handler: router,
+	}
+	return server.ListenAndServe()
+
 }

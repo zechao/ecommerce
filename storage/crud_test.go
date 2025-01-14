@@ -127,6 +127,18 @@ func TestCRUDStore(t *testing.T) {
 		assert.Len(t, results, 2)
 	})
 
+	RunTest("GetByFields", func(t *testing.T, tx *gorm.DB) {
+		store := storage.New[TestModel](tx)
+		model1 := &TestModel{ID: uuid.New(), Name: "Test1"}
+		assert.NoError(t, tx.Create(model1).Error)
+
+		result, err := store.GetByFields(ctx, map[string]string{
+			"name": "Test1",
+		}, false)
+		assert.NoError(t, err)
+		equalTestModel(t, model1, result)
+	})
+
 }
 
 func equalTestModel(t *testing.T, expected, actual *TestModel) {

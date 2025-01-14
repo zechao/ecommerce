@@ -21,10 +21,11 @@ func main() {
 		DBPassword: config.ENVs.DBPassword,
 		DBPort:     config.ENVs.DBPort,
 		DBSSLMode:  config.ENVs.DBSSLMode,
+		DebugMode:  config.ENVs.DebugMode,
 	})
 
 	checkStorage(db)
-	server := api.NewAPIServer(config.ENVs.HTTPHost+":"+config.ENVs.HTTPPort, nil)
+	server := api.NewAPIServer(config.ENVs.HTTPHost+":"+config.ENVs.HTTPPort, db)
 	err = server.Run()
 	if err != nil {
 		log.Panicf("error initializing server %v", err)

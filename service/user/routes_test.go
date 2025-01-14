@@ -30,7 +30,7 @@ func TestUserServiceHandlers(t *testing.T) {
 	handler := user.NewHandler(mockUserRep)
 
 	t.Run("fail by sser invalid payload", func(t *testing.T) {
-		payload := types.RegisterUserPlayload{
+		payload := types.RegisterUserPayload{
 			FirstName: "user",
 			LastName:  "123",
 			Email:     "",
