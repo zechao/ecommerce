@@ -11,64 +11,64 @@ import (
 	"sync"
 )
 
-// Ensure, that MockUserRepository does implement types.UserRepository.
+// Ensure, that MockProductRepository does implement types.ProductRepository.
 // If this is not the case, regenerate this file with moq.
-var _ types.UserRepository = &MockUserRepository{}
+var _ types.ProductRepository = &MockProductRepository{}
 
-// MockUserRepository is a mock implementation of types.UserRepository.
+// MockProductRepository is a mock implementation of types.ProductRepository.
 //
-//	func TestSomethingThatUsesUserRepository(t *testing.T) {
+//	func TestSomethingThatUsesProductRepository(t *testing.T) {
 //
-//		// make and configure a mocked types.UserRepository
-//		mockedUserRepository := &MockUserRepository{
-//			CreateFunc: func(contextMoqParam context.Context, user *types.User) error {
+//		// make and configure a mocked types.ProductRepository
+//		mockedProductRepository := &MockProductRepository{
+//			CreateFunc: func(contextMoqParam context.Context, product *types.Product) error {
 //				panic("mock out the Create method")
 //			},
-//			DeleteFunc: func(contextMoqParam context.Context, user *types.User) error {
+//			DeleteFunc: func(contextMoqParam context.Context, product *types.Product) error {
 //				panic("mock out the Delete method")
 //			},
-//			GetAllFunc: func(contextMoqParam context.Context, sQLModifier storage.SQLModifier) ([]types.User, error) {
+//			GetAllFunc: func(contextMoqParam context.Context, sQLModifier storage.SQLModifier) ([]types.Product, error) {
 //				panic("mock out the GetAll method")
 //			},
-//			GetByFieldsFunc: func(ctx context.Context, fields map[string]string, forUpdate bool) (*types.User, error) {
+//			GetByFieldsFunc: func(ctx context.Context, fields map[string]string, forUpdate bool) (*types.Product, error) {
 //				panic("mock out the GetByFields method")
 //			},
-//			GetByIDFunc: func(ctx context.Context, id uuid.UUID, forUpdate bool) (*types.User, error) {
+//			GetByIDFunc: func(ctx context.Context, id uuid.UUID, forUpdate bool) (*types.Product, error) {
 //				panic("mock out the GetByID method")
 //			},
-//			GetUserByEmailFunc: func(ctx context.Context, email string) (*types.User, error) {
-//				panic("mock out the GetUserByEmail method")
+//			GetProductsByIDsFunc: func(contextMoqParam context.Context, uUIDs []uuid.UUID) ([]types.Product, error) {
+//				panic("mock out the GetProductsByIDs method")
 //			},
-//			UpdateFunc: func(contextMoqParam context.Context, user *types.User) error {
+//			UpdateFunc: func(contextMoqParam context.Context, product *types.Product) error {
 //				panic("mock out the Update method")
 //			},
 //		}
 //
-//		// use mockedUserRepository in code that requires types.UserRepository
+//		// use mockedProductRepository in code that requires types.ProductRepository
 //		// and then make assertions.
 //
 //	}
-type MockUserRepository struct {
+type MockProductRepository struct {
 	// CreateFunc mocks the Create method.
-	CreateFunc func(contextMoqParam context.Context, user *types.User) error
+	CreateFunc func(contextMoqParam context.Context, product *types.Product) error
 
 	// DeleteFunc mocks the Delete method.
-	DeleteFunc func(contextMoqParam context.Context, user *types.User) error
+	DeleteFunc func(contextMoqParam context.Context, product *types.Product) error
 
 	// GetAllFunc mocks the GetAll method.
-	GetAllFunc func(contextMoqParam context.Context, sQLModifier storage.SQLModifier) ([]types.User, error)
+	GetAllFunc func(contextMoqParam context.Context, sQLModifier storage.SQLModifier) ([]types.Product, error)
 
 	// GetByFieldsFunc mocks the GetByFields method.
-	GetByFieldsFunc func(ctx context.Context, fields map[string]string, forUpdate bool) (*types.User, error)
+	GetByFieldsFunc func(ctx context.Context, fields map[string]string, forUpdate bool) (*types.Product, error)
 
 	// GetByIDFunc mocks the GetByID method.
-	GetByIDFunc func(ctx context.Context, id uuid.UUID, forUpdate bool) (*types.User, error)
+	GetByIDFunc func(ctx context.Context, id uuid.UUID, forUpdate bool) (*types.Product, error)
 
-	// GetUserByEmailFunc mocks the GetUserByEmail method.
-	GetUserByEmailFunc func(ctx context.Context, email string) (*types.User, error)
+	// GetProductsByIDsFunc mocks the GetProductsByIDs method.
+	GetProductsByIDsFunc func(contextMoqParam context.Context, uUIDs []uuid.UUID) ([]types.Product, error)
 
 	// UpdateFunc mocks the Update method.
-	UpdateFunc func(contextMoqParam context.Context, user *types.User) error
+	UpdateFunc func(contextMoqParam context.Context, product *types.Product) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -76,15 +76,15 @@ type MockUserRepository struct {
 		Create []struct {
 			// ContextMoqParam is the contextMoqParam argument value.
 			ContextMoqParam context.Context
-			// User is the user argument value.
-			User *types.User
+			// Product is the product argument value.
+			Product *types.Product
 		}
 		// Delete holds details about calls to the Delete method.
 		Delete []struct {
 			// ContextMoqParam is the contextMoqParam argument value.
 			ContextMoqParam context.Context
-			// User is the user argument value.
-			User *types.User
+			// Product is the product argument value.
+			Product *types.Product
 		}
 		// GetAll holds details about calls to the GetAll method.
 		GetAll []struct {
@@ -111,59 +111,59 @@ type MockUserRepository struct {
 			// ForUpdate is the forUpdate argument value.
 			ForUpdate bool
 		}
-		// GetUserByEmail holds details about calls to the GetUserByEmail method.
-		GetUserByEmail []struct {
-			// Ctx is the ctx argument value.
-			Ctx context.Context
-			// Email is the email argument value.
-			Email string
+		// GetProductsByIDs holds details about calls to the GetProductsByIDs method.
+		GetProductsByIDs []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// UUIDs is the uUIDs argument value.
+			UUIDs []uuid.UUID
 		}
 		// Update holds details about calls to the Update method.
 		Update []struct {
 			// ContextMoqParam is the contextMoqParam argument value.
 			ContextMoqParam context.Context
-			// User is the user argument value.
-			User *types.User
+			// Product is the product argument value.
+			Product *types.Product
 		}
 	}
-	lockCreate         sync.RWMutex
-	lockDelete         sync.RWMutex
-	lockGetAll         sync.RWMutex
-	lockGetByFields    sync.RWMutex
-	lockGetByID        sync.RWMutex
-	lockGetUserByEmail sync.RWMutex
-	lockUpdate         sync.RWMutex
+	lockCreate           sync.RWMutex
+	lockDelete           sync.RWMutex
+	lockGetAll           sync.RWMutex
+	lockGetByFields      sync.RWMutex
+	lockGetByID          sync.RWMutex
+	lockGetProductsByIDs sync.RWMutex
+	lockUpdate           sync.RWMutex
 }
 
 // Create calls CreateFunc.
-func (mock *MockUserRepository) Create(contextMoqParam context.Context, user *types.User) error {
+func (mock *MockProductRepository) Create(contextMoqParam context.Context, product *types.Product) error {
 	if mock.CreateFunc == nil {
-		panic("MockUserRepository.CreateFunc: method is nil but UserRepository.Create was just called")
+		panic("MockProductRepository.CreateFunc: method is nil but ProductRepository.Create was just called")
 	}
 	callInfo := struct {
 		ContextMoqParam context.Context
-		User            *types.User
+		Product         *types.Product
 	}{
 		ContextMoqParam: contextMoqParam,
-		User:            user,
+		Product:         product,
 	}
 	mock.lockCreate.Lock()
 	mock.calls.Create = append(mock.calls.Create, callInfo)
 	mock.lockCreate.Unlock()
-	return mock.CreateFunc(contextMoqParam, user)
+	return mock.CreateFunc(contextMoqParam, product)
 }
 
 // CreateCalls gets all the calls that were made to Create.
 // Check the length with:
 //
-//	len(mockedUserRepository.CreateCalls())
-func (mock *MockUserRepository) CreateCalls() []struct {
+//	len(mockedProductRepository.CreateCalls())
+func (mock *MockProductRepository) CreateCalls() []struct {
 	ContextMoqParam context.Context
-	User            *types.User
+	Product         *types.Product
 } {
 	var calls []struct {
 		ContextMoqParam context.Context
-		User            *types.User
+		Product         *types.Product
 	}
 	mock.lockCreate.RLock()
 	calls = mock.calls.Create
@@ -172,34 +172,34 @@ func (mock *MockUserRepository) CreateCalls() []struct {
 }
 
 // Delete calls DeleteFunc.
-func (mock *MockUserRepository) Delete(contextMoqParam context.Context, user *types.User) error {
+func (mock *MockProductRepository) Delete(contextMoqParam context.Context, product *types.Product) error {
 	if mock.DeleteFunc == nil {
-		panic("MockUserRepository.DeleteFunc: method is nil but UserRepository.Delete was just called")
+		panic("MockProductRepository.DeleteFunc: method is nil but ProductRepository.Delete was just called")
 	}
 	callInfo := struct {
 		ContextMoqParam context.Context
-		User            *types.User
+		Product         *types.Product
 	}{
 		ContextMoqParam: contextMoqParam,
-		User:            user,
+		Product:         product,
 	}
 	mock.lockDelete.Lock()
 	mock.calls.Delete = append(mock.calls.Delete, callInfo)
 	mock.lockDelete.Unlock()
-	return mock.DeleteFunc(contextMoqParam, user)
+	return mock.DeleteFunc(contextMoqParam, product)
 }
 
 // DeleteCalls gets all the calls that were made to Delete.
 // Check the length with:
 //
-//	len(mockedUserRepository.DeleteCalls())
-func (mock *MockUserRepository) DeleteCalls() []struct {
+//	len(mockedProductRepository.DeleteCalls())
+func (mock *MockProductRepository) DeleteCalls() []struct {
 	ContextMoqParam context.Context
-	User            *types.User
+	Product         *types.Product
 } {
 	var calls []struct {
 		ContextMoqParam context.Context
-		User            *types.User
+		Product         *types.Product
 	}
 	mock.lockDelete.RLock()
 	calls = mock.calls.Delete
@@ -208,9 +208,9 @@ func (mock *MockUserRepository) DeleteCalls() []struct {
 }
 
 // GetAll calls GetAllFunc.
-func (mock *MockUserRepository) GetAll(contextMoqParam context.Context, sQLModifier storage.SQLModifier) ([]types.User, error) {
+func (mock *MockProductRepository) GetAll(contextMoqParam context.Context, sQLModifier storage.SQLModifier) ([]types.Product, error) {
 	if mock.GetAllFunc == nil {
-		panic("MockUserRepository.GetAllFunc: method is nil but UserRepository.GetAll was just called")
+		panic("MockProductRepository.GetAllFunc: method is nil but ProductRepository.GetAll was just called")
 	}
 	callInfo := struct {
 		ContextMoqParam context.Context
@@ -228,8 +228,8 @@ func (mock *MockUserRepository) GetAll(contextMoqParam context.Context, sQLModif
 // GetAllCalls gets all the calls that were made to GetAll.
 // Check the length with:
 //
-//	len(mockedUserRepository.GetAllCalls())
-func (mock *MockUserRepository) GetAllCalls() []struct {
+//	len(mockedProductRepository.GetAllCalls())
+func (mock *MockProductRepository) GetAllCalls() []struct {
 	ContextMoqParam context.Context
 	SQLModifier     storage.SQLModifier
 } {
@@ -244,9 +244,9 @@ func (mock *MockUserRepository) GetAllCalls() []struct {
 }
 
 // GetByFields calls GetByFieldsFunc.
-func (mock *MockUserRepository) GetByFields(ctx context.Context, fields map[string]string, forUpdate bool) (*types.User, error) {
+func (mock *MockProductRepository) GetByFields(ctx context.Context, fields map[string]string, forUpdate bool) (*types.Product, error) {
 	if mock.GetByFieldsFunc == nil {
-		panic("MockUserRepository.GetByFieldsFunc: method is nil but UserRepository.GetByFields was just called")
+		panic("MockProductRepository.GetByFieldsFunc: method is nil but ProductRepository.GetByFields was just called")
 	}
 	callInfo := struct {
 		Ctx       context.Context
@@ -266,8 +266,8 @@ func (mock *MockUserRepository) GetByFields(ctx context.Context, fields map[stri
 // GetByFieldsCalls gets all the calls that were made to GetByFields.
 // Check the length with:
 //
-//	len(mockedUserRepository.GetByFieldsCalls())
-func (mock *MockUserRepository) GetByFieldsCalls() []struct {
+//	len(mockedProductRepository.GetByFieldsCalls())
+func (mock *MockProductRepository) GetByFieldsCalls() []struct {
 	Ctx       context.Context
 	Fields    map[string]string
 	ForUpdate bool
@@ -284,9 +284,9 @@ func (mock *MockUserRepository) GetByFieldsCalls() []struct {
 }
 
 // GetByID calls GetByIDFunc.
-func (mock *MockUserRepository) GetByID(ctx context.Context, id uuid.UUID, forUpdate bool) (*types.User, error) {
+func (mock *MockProductRepository) GetByID(ctx context.Context, id uuid.UUID, forUpdate bool) (*types.Product, error) {
 	if mock.GetByIDFunc == nil {
-		panic("MockUserRepository.GetByIDFunc: method is nil but UserRepository.GetByID was just called")
+		panic("MockProductRepository.GetByIDFunc: method is nil but ProductRepository.GetByID was just called")
 	}
 	callInfo := struct {
 		Ctx       context.Context
@@ -306,8 +306,8 @@ func (mock *MockUserRepository) GetByID(ctx context.Context, id uuid.UUID, forUp
 // GetByIDCalls gets all the calls that were made to GetByID.
 // Check the length with:
 //
-//	len(mockedUserRepository.GetByIDCalls())
-func (mock *MockUserRepository) GetByIDCalls() []struct {
+//	len(mockedProductRepository.GetByIDCalls())
+func (mock *MockProductRepository) GetByIDCalls() []struct {
 	Ctx       context.Context
 	ID        uuid.UUID
 	ForUpdate bool
@@ -323,71 +323,71 @@ func (mock *MockUserRepository) GetByIDCalls() []struct {
 	return calls
 }
 
-// GetUserByEmail calls GetUserByEmailFunc.
-func (mock *MockUserRepository) GetUserByEmail(ctx context.Context, email string) (*types.User, error) {
-	if mock.GetUserByEmailFunc == nil {
-		panic("MockUserRepository.GetUserByEmailFunc: method is nil but UserRepository.GetUserByEmail was just called")
+// GetProductsByIDs calls GetProductsByIDsFunc.
+func (mock *MockProductRepository) GetProductsByIDs(contextMoqParam context.Context, uUIDs []uuid.UUID) ([]types.Product, error) {
+	if mock.GetProductsByIDsFunc == nil {
+		panic("MockProductRepository.GetProductsByIDsFunc: method is nil but ProductRepository.GetProductsByIDs was just called")
 	}
 	callInfo := struct {
-		Ctx   context.Context
-		Email string
+		ContextMoqParam context.Context
+		UUIDs           []uuid.UUID
 	}{
-		Ctx:   ctx,
-		Email: email,
+		ContextMoqParam: contextMoqParam,
+		UUIDs:           uUIDs,
 	}
-	mock.lockGetUserByEmail.Lock()
-	mock.calls.GetUserByEmail = append(mock.calls.GetUserByEmail, callInfo)
-	mock.lockGetUserByEmail.Unlock()
-	return mock.GetUserByEmailFunc(ctx, email)
+	mock.lockGetProductsByIDs.Lock()
+	mock.calls.GetProductsByIDs = append(mock.calls.GetProductsByIDs, callInfo)
+	mock.lockGetProductsByIDs.Unlock()
+	return mock.GetProductsByIDsFunc(contextMoqParam, uUIDs)
 }
 
-// GetUserByEmailCalls gets all the calls that were made to GetUserByEmail.
+// GetProductsByIDsCalls gets all the calls that were made to GetProductsByIDs.
 // Check the length with:
 //
-//	len(mockedUserRepository.GetUserByEmailCalls())
-func (mock *MockUserRepository) GetUserByEmailCalls() []struct {
-	Ctx   context.Context
-	Email string
+//	len(mockedProductRepository.GetProductsByIDsCalls())
+func (mock *MockProductRepository) GetProductsByIDsCalls() []struct {
+	ContextMoqParam context.Context
+	UUIDs           []uuid.UUID
 } {
 	var calls []struct {
-		Ctx   context.Context
-		Email string
+		ContextMoqParam context.Context
+		UUIDs           []uuid.UUID
 	}
-	mock.lockGetUserByEmail.RLock()
-	calls = mock.calls.GetUserByEmail
-	mock.lockGetUserByEmail.RUnlock()
+	mock.lockGetProductsByIDs.RLock()
+	calls = mock.calls.GetProductsByIDs
+	mock.lockGetProductsByIDs.RUnlock()
 	return calls
 }
 
 // Update calls UpdateFunc.
-func (mock *MockUserRepository) Update(contextMoqParam context.Context, user *types.User) error {
+func (mock *MockProductRepository) Update(contextMoqParam context.Context, product *types.Product) error {
 	if mock.UpdateFunc == nil {
-		panic("MockUserRepository.UpdateFunc: method is nil but UserRepository.Update was just called")
+		panic("MockProductRepository.UpdateFunc: method is nil but ProductRepository.Update was just called")
 	}
 	callInfo := struct {
 		ContextMoqParam context.Context
-		User            *types.User
+		Product         *types.Product
 	}{
 		ContextMoqParam: contextMoqParam,
-		User:            user,
+		Product:         product,
 	}
 	mock.lockUpdate.Lock()
 	mock.calls.Update = append(mock.calls.Update, callInfo)
 	mock.lockUpdate.Unlock()
-	return mock.UpdateFunc(contextMoqParam, user)
+	return mock.UpdateFunc(contextMoqParam, product)
 }
 
 // UpdateCalls gets all the calls that were made to Update.
 // Check the length with:
 //
-//	len(mockedUserRepository.UpdateCalls())
-func (mock *MockUserRepository) UpdateCalls() []struct {
+//	len(mockedProductRepository.UpdateCalls())
+func (mock *MockProductRepository) UpdateCalls() []struct {
 	ContextMoqParam context.Context
-	User            *types.User
+	Product         *types.Product
 } {
 	var calls []struct {
 		ContextMoqParam context.Context
-		User            *types.User
+		Product         *types.Product
 	}
 	mock.lockUpdate.RLock()
 	calls = mock.calls.Update

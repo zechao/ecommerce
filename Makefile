@@ -8,6 +8,8 @@ install-tools:
 build:
 	@go build -o bin/ecom main.go
 
+mock_generate:
+	@go generate ./... 
 
 test:
 	@go test -v ./...
@@ -22,7 +24,7 @@ reset-local:
 run: build
 	@./bin/ecom
 
-run-local: set-up
+run-local: setup-local
 	go run main.go
 
 migration-create:
@@ -33,7 +35,7 @@ migration-create:
 	goose -s -dir ./migrations create $(name) sql
 
 migration-up:
-	@go run migrations/migration.go 
+	@go run migrations/migration.go up
 
 migration-down:
-	@go run migrations/migration.go 
+	@go run migrations/migration.go down

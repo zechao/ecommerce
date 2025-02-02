@@ -34,7 +34,7 @@ func main() {
 	log.Println("runnig migration")
 	goose.SetBaseFS(embedMigrations)
 
-	dir := "up"
+	dir := ""
 	if len(os.Args) > 1 {
 		dir = os.Args[1]
 	}

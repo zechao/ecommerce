@@ -19,11 +19,11 @@ func NewHandler(store types.ProductRepository) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/products", h.handlerlistProducts).Methods("GET")
+	router.HandleFunc("", h.handlerlistProducts).Methods("GET")
 }
 
 func (h *Handler) handlerlistProducts(w http.ResponseWriter, r *http.Request) {
-	ps, err := h.store.GetProducts(r.Context())
+	ps, err := h.store.GetAll(r.Context(), nil)
 	if err != nil {
 		httputil.WriteError(w, http.StatusInternalServerError, err)
 		return

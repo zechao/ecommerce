@@ -28,11 +28,3 @@ func (s *repository) GetUserByEmail(ctx context.Context, email string) (*types.U
 	}
 	return res, nil
 }
-
-func (s *repository) CreateUser(ctx context.Context, user *types.User) error {
-	err := s.CRUDStorer.Create(ctx, user)
-	if err != nil {
-		return fmt.Errorf("error getting user %w", err)
-	}
-	return nil
-}

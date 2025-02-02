@@ -11,5 +11,5 @@ var (
 	// ErrDuplicateKey is returned when attempting to create a record that already exists in storage.
 	// This typically occurs when trying to insert a record with a unique key constraint
 	// that conflicts with an existing entry.
-	ErrDuplicateKey   = errors.New("record already exist")
+	ErrDuplicateKey = errors.New("record already exist")
 )

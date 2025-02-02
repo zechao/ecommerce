@@ -45,7 +45,7 @@ package storage
 
 import (
 	"context"
-	"strings"
+	"errors"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -73,7 +73,7 @@ type CRUDStorer[T any] interface {
 	// GetByFields retrieves a record by its field name and value.  for Update is used to lock the record for update. and only supportted by
 	GetByFields(ctx context.Context, fields map[string]string, forUpdate bool) (*T, error)
 	Delete(context.Context, *T) error
-	//It will insert the data into the table only if the record is new,It doesn't update existing records; if the record already exists, GORM will return an error.
+	// Create It will insert the data into the table only if the record is new,It doesn't update existing records; if the record already exists, GORM will return an error.
 	Create(context.Context, *T) error
 	Update(context.Context, *T) error
 }
@@ -86,7 +86,7 @@ type CRUDStore[T any] struct {
 func (c CRUDStore[T]) Create(ctx context.Context, t *T) error {
 	result := c.db.WithContext(ctx).Create(&t)
 	if result.Error != nil {
-		if strings.Contains(result.Error.Error(), "duplicate key value violates unique constraint") {
+		if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
 			return ErrDuplicateKey
 		}
 		return result.Error

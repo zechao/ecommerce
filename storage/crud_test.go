@@ -29,7 +29,7 @@ func TestCRUDStore(t *testing.T) {
 	// 1. Start the postgres ctr and run any migrations on it
 	ctr, err := pgContainer.Run(
 		ctx,
-		"postgres:16-alpine",
+		"postgres:17-alpine",
 		pgContainer.WithDatabase(dbname),
 		pgContainer.WithUsername(user),
 		pgContainer.WithPassword(password),
@@ -41,7 +41,9 @@ func TestCRUDStore(t *testing.T) {
 	dbURL, err := ctr.ConnectionString(ctx, "sslmode=disable")
 	assert.NoError(t, err)
 
-	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{
+		TranslateError: true,
+	})
 	db = db.Debug()
 	assert.NoError(t, err)
 
