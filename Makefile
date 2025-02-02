@@ -8,6 +8,8 @@ install-tools:
 build:
 	@go build -o bin/ecom main.go
 
+mock_generate:
+	@go generate ./... 
 
 test:
 	@go test -v ./...

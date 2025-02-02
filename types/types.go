@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/zechao158/ecomm/storage"
 )
 
 type RegisterUserPayload struct {
@@ -40,10 +41,6 @@ func (User) TableName() string {
 	return "ecom.users"
 }
 
-type ProductRepository interface {
-	GetProducts(context.Context) ([]Product, error)
-}
-
 type Product struct {
 	ID          uuid.UUID `gorm:"type:uuid;primarykey"`
 	Name        string
@@ -55,6 +52,44 @@ type Product struct {
 	UpdatedAt   *time.Time
 }
 
+//go:generate moq -rm -pkg mocks -out mocks/product_mock.go . ProductRepository:MockProductRepository
+type ProductRepository interface {
+	GetProducts(context.Context) ([]Product, error)
+}
+
 func (Product) TableName() string {
 	return "ecom.products"
+}
+
+type Order struct {
+	ID        uuid.UUID `gorm:"type:uuid;primarykey"`
+	UserID    uuid.UUID `gorm:"type:uuid"`
+	Total     float64
+	Status    string
+	Address   string
+	CreatedAt time.Time
+	UpdatedAt *time.Time
+}
+
+type OrderItem struct {
+	ID        uuid.UUID `gorm:"type:uuid;primarykey"`
+	OrderID   uuid.UUID `gorm:"type:uuid"`
+	ProductID uuid.UUID `gorm:"type:uuid"`
+	Quantity  int
+	Price     float64
+	CreatedAt time.Time
+	UpdatedAt *time.Time
+}
+
+//go:generate moq -rm -pkg mocks -out mocks/product_mock.go . ProductRepository:MockProductRepository
+type OrderRepository interface {
+	storage.CRUDStorer[Order]
+}
+
+type OrderItemRepository interface {
+	storage.CRUDStorer[OrderItem]
+}
+
+func (Order) TableName() string {
+	return "ecom.carts"
 }
