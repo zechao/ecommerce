@@ -1,7 +1,6 @@
 package user
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/zechao158/ecomm/config"
+	httputil "github.com/zechao158/ecomm/http"
 	"github.com/zechao158/ecomm/service/auth"
 	"github.com/zechao158/ecomm/storage"
 	"github.com/zechao158/ecomm/types"
@@ -32,60 +32,60 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 
 func (h *Handler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	var payload types.LoginUserPayload
-	if err := ParseJSON(r, &payload); err != nil {
-		WriteError(w, http.StatusBadRequest, err)
+	if err := httputil.ParseJSON(r, &payload); err != nil {
+		httputil.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
-	if err := Validate.Struct(payload); err != nil {
+	if err := httputil.Validate.Struct(payload); err != nil {
 		validationErr := err.(validator.ValidationErrors)
-		WriteError(w, http.StatusBadRequest, validationErr)
+		httputil.WriteError(w, http.StatusBadRequest, validationErr)
 		return
 	}
-	storedUser, err := h.store.GetUserByEmail(context.Background(), payload.Email)
+	storedUser, err := h.store.GetUserByEmail(r.Context(), payload.Email)
 	if err != nil && errors.Unwrap(err) == storage.ErrDuplicateKey {
-		WriteError(w, http.StatusConflict, err)
+		httputil.WriteError(w, http.StatusConflict, err)
 		return
 	}
 	if !auth.ComparePassword(storedUser.Password, payload.Password) {
-		WriteError(w, http.StatusBadRequest, fmt.Errorf("wrong password"))
+		httputil.WriteError(w, http.StatusBadRequest, fmt.Errorf("wrong password"))
 		return
 	}
 
 	authToken, err := auth.CreateJWT([]byte(config.ENVs.JWTSecret), storedUser.ID)
 	if err != nil {
-		WriteError(w, http.StatusBadRequest, err)
+		httputil.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
-	WriteJSON(w, http.StatusOK, map[string]string{
+	httputil.WriteJSON(w, http.StatusOK, map[string]string{
 		"token": authToken,
 	})
 }
 
 func (h *Handler) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	var payload types.RegisterUserPayload
-	if err := ParseJSON(r, &payload); err != nil {
-		WriteError(w, http.StatusBadRequest, err)
+	if err := httputil.ParseJSON(r, &payload); err != nil {
+		httputil.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	_, err := h.store.GetUserByEmail(context.Background(), payload.Email)
+	_, err := h.store.GetUserByEmail(r.Context(), payload.Email)
 	if err != nil && errors.Unwrap(err) == storage.ErrDuplicateKey {
-		WriteError(w, http.StatusConflict, err)
+		httputil.WriteError(w, http.StatusConflict, err)
 		return
 	}
 	if err != nil && errors.Unwrap(err) != storage.ErrRecordNotFound {
-		WriteError(w, http.StatusInternalServerError, err)
+		httputil.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
-	if err := Validate.Struct(payload); err != nil {
+	if err := httputil.Validate.Struct(payload); err != nil {
 		validationErr := err.(validator.ValidationErrors)
-		WriteError(w, http.StatusBadRequest, validationErr)
+		httputil.WriteError(w, http.StatusBadRequest, validationErr)
 		return
 	}
 
 	hashedPass, err := auth.HashPassword(payload.Password)
 	if err != nil {
-		WriteError(w, http.StatusInternalServerError, err)
+		httputil.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
 	user := &types.User{
@@ -95,13 +95,13 @@ func (h *Handler) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		Email:     payload.Email,
 		Password:  hashedPass,
 	}
-	err = h.store.CreateUser(context.Background(), user)
+	err = h.store.CreateUser(r.Context(), user)
 	if err != nil {
-		WriteError(w, http.StatusInternalServerError, err)
+		httputil.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	WriteJSON(w, http.StatusCreated, &types.RegisterUserPayload{
+	httputil.WriteJSON(w, http.StatusCreated, &types.RegisterUserPayload{
 		ID:        uuid.New(),
 		FirstName: payload.FirstName,
 		LastName:  payload.LastName,

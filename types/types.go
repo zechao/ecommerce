@@ -33,9 +33,28 @@ type User struct {
 	Email     string
 	Password  string
 	CreatedAt time.Time
-	UpdatedAt time.Time
+	UpdatedAt *time.Time
 }
 
 func (User) TableName() string {
 	return "ecom.users"
+}
+
+type ProductRepository interface {
+	GetProducts(context.Context) ([]Product, error)
+}
+
+type Product struct {
+	ID          uuid.UUID `gorm:"type:uuid;primarykey"`
+	Name        string
+	Description string
+	Image       string
+	Price       float64
+	Quantity    int
+	CreatedAt   time.Time
+	UpdatedAt   *time.Time
+}
+
+func (Product) TableName() string {
+	return "ecom.products"
 }
